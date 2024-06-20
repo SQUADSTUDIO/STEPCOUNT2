@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Шагомер</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Шагомер</h1>
+        <div class="step-counter">
+            <p>Количество шагов:</p>
+            <h2 id="step-count">0</h2>
+        </div>
+        <button id="start-button">Начать</button>
+    </div>
+    <script>let stepCount = 0;
+        let isRunning = false;
+        
+        document.getElementById('start-button').addEventListener('click', () => {
+            if (isRunning) {
+                alert("Шагомер уже работает!");
+                return;
+            }
+        
+            if ('Accelerometer' in window) {
+                try {
+                    const accelerometer = new Accelerometer({ frequency: 60 });
+        
+                    accelerometer.addEventListener('reading', () => {
+                        if (Math.abs(accelerometer.x) > 1.5 || Math.abs(accelerometer.y) > 1.5 || Math.abs(accelerometer.z) > 1.5) {
+                            stepCount++;
+                            document.getElementById('step-count').innerText = stepCount;
+                        }
+                    });
+        
+                    accelerometer.start();
+                    isRunning = true;
+                } catch (error) {
+                    alert('Ошибочка: ' + error.message);
+                }
+            } else {
+                alert('Че то ты меня не потянеш.');
+            }
+        });
+        </script>
+</body>
+</html>
+
